@@ -1,17 +1,19 @@
 # Installation instructions
 1) [Register github app](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
 2) [create a github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+3) [docker image](https://hub.docker.com/repository/docker/sahildhingraa/pubdeskmd)
 3) give `Contents` permissions to the token in `Repository Permissions` section
 
 ### Back
-1) edit `.env.dev` file, you can take variable names from `.env.example`
+1) add `.env.dev` file, you can take variable names from `.env.example`
 
 ### Front
-1) edit `fe/.env`, you can take variable names from `.env.example`
+1) add `fe/.env`, you can take variable names from `.env.example`
 
 ### Set up Docker
-1) add `FRONT_PORT` to expose frontend in `docker-compose.yml` file (default is `3000`)
-2) Run `docker-compose up --build` command  to compile docker image from code
+1) Run below command to compile docker image from code
+`docker run --name pubdeskmd -e DOMAIN_NAME= -e GITHUB_APP_ID= -e GITHUB_CLIENT_ID= -e GITHUB_SECRET= -d -p PORT:4173 sahildhingraa/pubdeskmd`
+2) replace `PORT`with the port you want to run the app on
 
 # Usage
 1) open `localhost:3000` in your browser
