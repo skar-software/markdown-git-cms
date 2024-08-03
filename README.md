@@ -1,7 +1,7 @@
 # Installation instructions
 **1) Run docker**
 
-docker pull anonranger/pubdesk
+docker pull anonranger/pubdeskmd
 
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
    
