@@ -5,8 +5,17 @@ docker pull anonranger/pubdesk
 
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
    
+**1) Create a Personal Access Token**
 
+Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token)
 
+![token-perm1](https://github.com/user-attachments/assets/d3784bde-67c7-408b-9653-f226458c0e6b)
+
+![token-perm2](https://github.com/user-attachments/assets/3efd6dd1-ae93-4990-85cb-faeab8493982)
+
+![token-perm3](https://github.com/user-attachments/assets/294e637c-e867-4bfb-975f-b676a2499603)
+
+![token-perm4](https://github.com/user-attachments/assets/c9d68906-10dd-47be-8ed1-3ae80faa5098)
 
 # Usage
 **1) open `localhost:3000` in your browser** 
