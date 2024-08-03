@@ -5,18 +5,8 @@ docker pull anonranger/pubdesk
 
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
    
-4) give `Contents` permissions to the token in `Repository Permissions` section
 
-### Back
-1) add `.env.dev` file, you can take variable names from `.env.example`
 
-### Front
-1) add `fe/.env`, you can take variable names from `.env.example`
-
-### Set up Docker
-1) Run below command to compile docker image from code
-`docker run --name pubdeskmd -e DOMAIN_NAME= -e GITHUB_APP_ID= -e GITHUB_CLIENT_ID= -e GITHUB_SECRET= -d -p PORT:4173 sahildhingraa/pubdeskmd`
-2) replace `PORT`with the port you want to run the app on
 
 # Usage
 **1) open `localhost:3000` in your browser** 
