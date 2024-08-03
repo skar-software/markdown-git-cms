@@ -8,12 +8,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/google/go-github/v62/github"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/go-github/v62/github"
 )
 
 type Github struct {
@@ -23,9 +24,9 @@ type Github struct {
 }
 
 type UploadStruct struct {
-	Repo     string `json:"repo"`
-	Content  string `json:"content"`
-	File string `json:"file"`
+	Repo    string `json:"repo"`
+	Content string `json:"content"`
+	File    string `json:"file"`
 }
 
 type GitHubMeStruct struct {
@@ -143,6 +144,7 @@ func GithubSendFile(c *fiber.Ctx) error {
 	}
 
 	err := sendFile(tkn, payload.Repo, payload.Content, payload.File, fmt.Sprintf("Update %s", payload.File))
+	log.Println(err)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
 	}

@@ -50,5 +50,7 @@ EXPOSE 4173 4000
 # Copy the .env.dev file for the backend
 COPY .env.dev /app/pubdeskmd1/.env.dev
 
+RUN export $(grep -v '^#' .env.dev | xargs -0)
+
 # Start both services
 CMD ["sh", "-c", "cd /app/fe && npm run start & cd /app/pubdeskmd1 && ./main"]
