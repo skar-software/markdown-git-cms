@@ -6,10 +6,9 @@
     import { Carta, MarkdownEditor } from 'carta-md';
     import 'carta-md/default.css';
 
-    const carta = new Carta({
-        // Remember to use a sanitizer to prevent XSS attacks
-        // sanitizer: mySanitizer
-    });
+    // Remember to use a sanitizer to prevent XSS attacks
+    // {sanitizer: mySanitizer}
+    const carta = new Carta();
     let value = "";
 
     const url: string = '/api/file?';
@@ -59,14 +58,6 @@
         color: #ff3e00;
         text-transform: uppercase;
         font-size: 4em;
-        font-weight: 100;
-    }
-
-    table {
-        color: #ff3e00;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 1.5em;
         font-weight: 100;
     }
 

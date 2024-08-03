@@ -49,14 +49,6 @@
         margin: 0 auto;
     }
 
-    table {
-        color: #ff3e00;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 2em;
-        font-weight: 100;
-    }
-
     h1 {
         color: #ff3e00;
         text-transform: uppercase;
