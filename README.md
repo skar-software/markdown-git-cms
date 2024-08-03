@@ -2,6 +2,7 @@
 **1) Run docker**
 
 docker pull anonranger/pubdesk
+
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
    
 4) give `Contents` permissions to the token in `Repository Permissions` section
