@@ -9,7 +9,7 @@ docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
 
 Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token)
 
-Security recommendation: When creating a Fine grained token, keep the validity window to a small timeline. Also give access only to specific repos you want to edit.
+**Security recommendation:** When creating a Fine grained token, keep the validity window to a small timeline. Also give access only to specific repos you want to edit.
 
 ![token-perm1](https://github.com/user-attachments/assets/d3784bde-67c7-408b-9653-f226458c0e6b)
 
