@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: front
     ports:
-      - "${FRONT_PORT}:4173"
+      - "${FRONT_PORT-3000}:4173"
     environment:
       NODE_ENV: development
     networks:
