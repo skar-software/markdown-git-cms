@@ -1,6 +1,6 @@
 # Installation instructions
-1) [Register github app]('https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app')
-2) [create a github personal access token]('https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+1) [Register github app](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
+2) [create a github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 3) give `Contents` permissions to the token in `Repository Permissions` section
 
 ### Back
