@@ -47,5 +47,8 @@ COPY --from=backend /app/pubdeskmd1/main ./
 # Expose ports (adjust as needed)
 EXPOSE 4173 4000
 
+# Copy the .env.dev file for the backend
+COPY .env.dev /app/pubdeskmd1/.env.dev
+
 # Start both services
 CMD ["sh", "-c", "cd /app/fe && npm run start & cd /app/pubdeskmd1 && ./main"]
