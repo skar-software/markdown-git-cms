@@ -9,8 +9,8 @@
 3) Backend is working
 
 ### Front
-1) edit `front/.env`, you can take variable names from `.env.example`
-2) `cd front && npm i && npm run dev`
+1) edit `fe/.env`, you can take variable names from `.env.example`
+2) `cd fe && npm i && npm run dev`
 3) Frontend is working
 
 ### Set up nginx config

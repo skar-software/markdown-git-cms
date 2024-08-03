@@ -6,8 +6,13 @@ COPY package*.json .
 
 RUN npm ci
 
-COPY . .
+COPY svelte.config.js ./
+COPY vite.config.ts ./
+COPY tsconfig.json ./
+COPY src/ ./src/
+COPY static/ ./static/
+
 RUN npm run build
 RUN npm prune --production
 
-CMD [ "node", "build" ]
+CMD [ "npm", "run", "start" ]
