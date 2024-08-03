@@ -5,7 +5,7 @@ docker pull anonranger/pubdesk
 
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
    
-**1) Create a Personal Access Token**
+**2) Create a Personal Access Token**
 
 Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token)
 
