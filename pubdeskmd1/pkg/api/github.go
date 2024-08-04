@@ -1,17 +1,13 @@
 package api
 
 import (
-	"bytes"
 	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/go-github/v62/github"
@@ -35,51 +31,51 @@ type GitHubMeStruct struct {
 	Email string `json:"email"`
 }
 
-func GetGithubEnv() Github {
-	return Github{
-		os.Getenv("GITHUB_APP_ID"),
-		os.Getenv("GITHUB_CLIENT_ID"),
-		os.Getenv("GITHUB_SECRET"),
-	}
-}
+// func GetGithubEnv() Github {
+// 	return Github{
+// 		os.Getenv("GITHUB_APP_ID"),
+// 		os.Getenv("GITHUB_CLIENT_ID"),
+// 		os.Getenv("GITHUB_SECRET"),
+// 	}
+// }
 
-func GithubRedirect(c *fiber.Ctx) error {
-	// create a CSRF token and store it locally
-	b := make([]byte, 16)
-	_, _ = rand.Read(b)
-	state := hex.EncodeToString(b)
-	c.Cookie(&fiber.Cookie{
-		Name:  "github_state",
-		Value: state,
-	})
-	scope := "repo:status+repo+public_repo+admin:repo_hook+admin:org+admin:public_key+admin:org_hook+user+user:follow+read:gpg_key+delete:packages+read:discussion+workflow+admin:gpg_key+write:packages+delete_repo+read:user+gist+write:public_key+write:org+write:repo_hook+repo:invite+write:gpg_key+read:packages+write:discussion+user:email+notifications+read:public_key+read:org+read:repo_hook+security_events+repo_deployment"
+// func GithubRedirect(c *fiber.Ctx) error {
+// 	// create a CSRF token and store it locally
+// 	b := make([]byte, 16)
+// 	_, _ = rand.Read(b)
+// 	state := hex.EncodeToString(b)
+// 	c.Cookie(&fiber.Cookie{
+// 		Name:  "github_state",
+// 		Value: state,
+// 	})
+// 	scope := "repo:status+repo+public_repo+admin:repo_hook+admin:org+admin:public_key+admin:org_hook+user+user:follow+read:gpg_key+delete:packages+read:discussion+workflow+admin:gpg_key+write:packages+delete_repo+read:user+gist+write:public_key+write:org+write:repo_hook+repo:invite+write:gpg_key+read:packages+write:discussion+user:email+notifications+read:public_key+read:org+read:repo_hook+security_events+repo_deployment"
 
-	d := GetGithubEnv()
-	link := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=%s",
-		d.GithubClientID,
-		scope,
-		fmt.Sprintf("%s/callback", os.Getenv("DOMAIN_NAME")),
-		state,
-	)
-	return c.Redirect(link, http.StatusTemporaryRedirect)
-}
+// 	d := GetGithubEnv()
+// 	link := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=%s",
+// 		d.GithubClientID,
+// 		scope,
+// 		fmt.Sprintf("%s/callback", os.Getenv("DOMAIN_NAME")),
+// 		state,
+// 	)
+// 	return c.Redirect(link, http.StatusTemporaryRedirect)
+// }
 
-func GithubCallback(c *fiber.Ctx) error {
-	code := c.Query("code")
-	if c.Query("state") != c.Cookies("github_state") {
-		return c.Status(400).SendString("error - bad state")
-	}
+// func GithubCallback(c *fiber.Ctx) error {
+// 	code := c.Query("code")
+// 	if c.Query("state") != c.Cookies("github_state") {
+// 		return c.Status(400).SendString("error - bad state")
+// 	}
 
-	tkn := getGithubAccessToken(code)
-	if tkn == "" {
-		return c.Status(400).SendString("error")
-	}
-	c.Cookie(&fiber.Cookie{
-		Name:  "tkn",
-		Value: tkn,
-	})
-	return c.Redirect("/repos", http.StatusTemporaryRedirect)
-}
+// 	tkn := getGithubAccessToken(code)
+// 	if tkn == "" {
+// 		return c.Status(400).SendString("error")
+// 	}
+// 	c.Cookie(&fiber.Cookie{
+// 		Name:  "tkn",
+// 		Value: tkn,
+// 	})
+// 	return c.Redirect("/repos", http.StatusTemporaryRedirect)
+// }
 
 func GithubSetToken(c *fiber.Ctx) error {
 	tkn := c.Query("tkn")
@@ -98,10 +94,10 @@ func GithubSetToken(c *fiber.Ctx) error {
 
 func GithubMyRepos(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
-	data := getGithubData(tkn)
+	// data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
-	opts := github.RepositoryListByUserOptions{Sort: "created", Type: "owner"}
-	list, _, err := client.Repositories.ListByUser(context.Background(), data.Login, &opts)
+	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Type: "owner"}
+	list, _, err := client.Repositories.ListByAuthenticatedUser(context.Background(), &opts)
 	if err != nil {
 		return c.Status(200).SendString(fmt.Sprintf("error, %e", err))
 	}
@@ -157,6 +153,7 @@ func getRepoFiles(tkn, repo, path string) (res []string, err error) {
 	ctx := context.Background()
 
 	_, d, resp, err := client.Repositories.GetContents(ctx, data.Login, repo, path, nil)
+	// log.Println(resp)
 	if resp.StatusCode != 200 || err != nil {
 		return res, errors.New("File does not exist")
 	}
@@ -199,9 +196,9 @@ func sendFile(tkn, repo, content, fileName, commitMessage string) error {
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.CreateFile(ctx, data.Login, repo, fileName, opts)
+		commit, resp, err := client.Repositories.UpdateFile(ctx, data.Login, repo, fileName, opts)
 		if resp.StatusCode != 200 {
-			return errors.New(fmt.Sprintf("Error creating file: %s", resp.Status))
+			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {
 			return err
 		}
@@ -214,9 +211,9 @@ func sendFile(tkn, repo, content, fileName, commitMessage string) error {
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.CreateFile(ctx, data.Login, repo, fileName, opts)
+		commit, resp, err := client.Repositories.UpdateFile(ctx, data.Login, repo, fileName, opts)
 		if resp.StatusCode != 200 {
-			return errors.New(fmt.Sprintf("Error creating file: %s", resp.Status))
+			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {
 			return err
 		}
@@ -225,53 +222,53 @@ func sendFile(tkn, repo, content, fileName, commitMessage string) error {
 	}
 }
 
-func getGithubAccessToken(code string) string {
-	d := GetGithubEnv()
-	// Set us the request body as JSON
-	requestBodyMap := map[string]string{
-		"client_id":     d.GithubClientID,
-		"client_secret": d.GithubSecret,
-		"code":          code,
-	}
-	requestJSON, _ := json.Marshal(requestBodyMap)
+// func getGithubAccessToken(code string) string {
+// 	d := GetGithubEnv()
+// 	// Set us the request body as JSON
+// 	requestBodyMap := map[string]string{
+// 		"client_id":     d.GithubClientID,
+// 		"client_secret": d.GithubSecret,
+// 		"code":          code,
+// 	}
+// 	requestJSON, _ := json.Marshal(requestBodyMap)
 
-	// POST request to set URL
-	req, reqerr := http.NewRequest(
-		"POST",
-		"https://github.com/login/oauth/access_token",
-		bytes.NewBuffer(requestJSON),
-	)
-	if reqerr != nil {
-		log.Panic("Request creation failed")
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+// 	// POST request to set URL
+// 	req, reqerr := http.NewRequest(
+// 		"POST",
+// 		"https://github.com/login/oauth/access_token",
+// 		bytes.NewBuffer(requestJSON),
+// 	)
+// 	if reqerr != nil {
+// 		log.Panic("Request creation failed")
+// 	}
+// 	req.Header.Set("Content-Type", "application/json")
+// 	req.Header.Set("Accept", "application/json")
 
-	// Get the response
-	resp, resperr := http.DefaultClient.Do(req)
-	if resperr != nil {
-		log.Panic("Request failed")
-	}
+// 	// Get the response
+// 	resp, resperr := http.DefaultClient.Do(req)
+// 	if resperr != nil {
+// 		log.Panic("Request failed")
+// 	}
 
-	// Response body converted to stringified JSON
-	respbody, _ := ioutil.ReadAll(resp.Body)
+// 	// Response body converted to stringified JSON
+// 	respbody, _ := ioutil.ReadAll(resp.Body)
 
-	// Represents the response received from Github
-	type githubAccessTokenResponse struct {
-		AccessToken string `json:"access_token"`
-		TokenType   string `json:"token_type"`
-		Scope       string `json:"scope"`
-	}
+// 	// Represents the response received from Github
+// 	type githubAccessTokenResponse struct {
+// 		AccessToken string `json:"access_token"`
+// 		TokenType   string `json:"token_type"`
+// 		Scope       string `json:"scope"`
+// 	}
 
-	// Convert stringified JSON to a struct object of type githubAccessTokenResponse
-	var ghresp githubAccessTokenResponse
-	json.Unmarshal(respbody, &ghresp)
-	fmt.Println("ghresp.Scope: ", ghresp.Scope)
+// 	// Convert stringified JSON to a struct object of type githubAccessTokenResponse
+// 	var ghresp githubAccessTokenResponse
+// 	json.Unmarshal(respbody, &ghresp)
+// 	fmt.Println("ghresp.Scope: ", ghresp.Scope)
 
-	// Return the access token (as the rest of the
-	// details are relatively unnecessary for us)
-	return ghresp.AccessToken
-}
+// 	// Return the access token (as the rest of the
+// 	// details are relatively unnecessary for us)
+// 	return ghresp.AccessToken
+// }
 
 func getGithubData(accessToken string) GitHubMeStruct {
 	// Get request to a set URL
