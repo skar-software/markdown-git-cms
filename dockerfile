@@ -1,17 +1,17 @@
 # Start with Node.js for the frontend
 FROM node:18 AS frontend
 
-WORKDIR /app/fe
+WORKDIR /app/frontend
 
-COPY fe/package*.json ./
+COPY frontend/package*.json ./
 
 RUN npm ci
 
-COPY fe/svelte.config.js ./
-COPY fe/vite.config.ts ./
-COPY fe/tsconfig.json ./
-COPY fe/src/ ./src/
-COPY fe/static/ ./static/
+COPY frontend/svelte.config.js ./
+COPY frontend/vite.config.ts ./
+COPY frontend/tsconfig.json ./
+COPY frontend/src/ ./src/
+COPY frontend/static/ ./static/
 
 RUN npm run build
 RUN npm prune --production
@@ -19,12 +19,12 @@ RUN npm prune --production
 # Build the backend
 FROM golang:alpine AS backend
 
-WORKDIR /app/pubdeskmd1
+WORKDIR /app/backend
 
-COPY pubdeskmd1/go.mod pubdeskmd1/go.sum ./
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
-COPY pubdeskmd1/ .
+COPY backend/ .
 RUN go build -o ./main .
 
 # Final stage
@@ -37,15 +37,15 @@ RUN apk add --no-cache nodejs npm
 RUN apk add --no-cache libc6-compat
 
 # Copy frontend files
-WORKDIR /app/fe
-COPY --from=frontend /app/fe ./
+WORKDIR /app/frontend
+COPY --from=frontend /app/frontend ./
 
 # Copy backend binary
-WORKDIR /app/pubdeskmd1
-COPY --from=backend /app/pubdeskmd1/main ./
+WORKDIR /app/backend
+COPY --from=backend /app/backend/main ./
 
 # Expose ports (adjust as needed)
 EXPOSE 4173 4000
 
 # Start both services
-CMD ["sh", "-c", "cd /app/fe && npm run start & cd /app/pubdeskmd1 && ./main"]
+CMD ["sh", "-c", "cd /app/frontend && npm run start & cd /app/backend && ./main"]
