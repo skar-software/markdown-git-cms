@@ -34,13 +34,13 @@
 </script>
 
 <main>
-  <h1>Choose your repository</h1>
+  <h1>Choose file from {data.rep} repository</h1>
   <form on:submit|preventDefault={handleSubmit}>
     <label>
       <span>New file name</span>
       <input name="file" />
     </label>
-    <button type="submit">Create new file</button>
+    <!-- <button type="submit">Create new file</button> -->
   </form>
   <table>
     <tr><p>---------------------</p></tr>
@@ -73,7 +73,7 @@
   h1 {
     color: #ff3e00;
     text-transform: uppercase;
-    font-size: 4em;
+    font-size: 3em;
     font-weight: 100;
   }
 

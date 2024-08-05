@@ -2,3 +2,4 @@
 .aws-sam
 .env.dev
 .env.local
+backend/tmp/
