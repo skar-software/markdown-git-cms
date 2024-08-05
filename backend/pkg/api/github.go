@@ -23,12 +23,18 @@ type UploadStruct struct {
 	Repo    string `json:"repo"`
 	Content string `json:"content"`
 	File    string `json:"file"`
+	Owner   string `json:"owner"`
 }
 
 type GitHubMeStruct struct {
 	Login string `json:"login"`
 	Id    uint   `json:"id"`
 	Email string `json:"email"`
+}
+
+type Repo struct {
+	Name  string
+	Owner string
 }
 
 // func GetGithubEnv() Github {
@@ -96,15 +102,27 @@ func GithubMyRepos(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
 	// data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
-	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Type: "owner"}
+	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Affiliation: "owner,collaborator,organization_member"}
 	list, _, err := client.Repositories.ListByAuthenticatedUser(context.Background(), &opts)
 	if err != nil {
 		return c.Status(200).SendString(fmt.Sprintf("error, %e", err))
 	}
 
-	r := []string{}
+	// Fetch repositories from organizations the user belongs to
+	// ctx := context.Background()
+	// opt := github.ListOptions{
+	// 	PerPage: 1000,
+	// }
+	// orgs, _, err := client.Organizations.List(ctx, "", &opt)
+	// if err != nil {
+	// 	// Handle error
+	// 	return err
+	// }
+	// log.Println(orgs)
+
+	r := []Repo{}
 	for _, l := range list {
-		r = append(r, *l.Name)
+		r = append(r, Repo{Name: *l.Name, Owner: *l.Owner.Login})
 	}
 	return c.Status(200).JSON(r)
 }
@@ -112,8 +130,9 @@ func GithubMyRepos(c *fiber.Ctx) error {
 func GithubRepoFiles(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
 	repoName := c.Query("repo")
+	owner := c.Query("owner")
 
-	res, err := getRepoFiles(tkn, repoName, "/")
+	res, err := getRepoFiles(tkn, repoName, owner, "/")
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
 	}
@@ -122,10 +141,11 @@ func GithubRepoFiles(c *fiber.Ctx) error {
 
 func GithubRepoFile(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
+	owner := c.Query("owner")
 	repoName := c.Query("repo")
 	path := c.Query("path")
 
-	res, err := getFile(tkn, repoName, path)
+	res, err := getFile(tkn, owner, repoName, path)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
 	}
@@ -139,7 +159,7 @@ func GithubSendFile(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := sendFile(tkn, payload.Repo, payload.Content, payload.File, fmt.Sprintf("Update %s", payload.File))
+	err := sendFile(tkn, payload.Owner, payload.Repo, payload.Content, payload.File, fmt.Sprintf("Update %s", payload.File))
 	log.Println(err)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
@@ -147,12 +167,12 @@ func GithubSendFile(c *fiber.Ctx) error {
 	return c.Status(200).SendString("success")
 }
 
-func getRepoFiles(tkn, repo, path string) (res []string, err error) {
-	data := getGithubData(tkn)
+func getRepoFiles(tkn, repo, owner, path string) (res []string, err error) {
+	// data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
 
-	_, d, resp, err := client.Repositories.GetContents(ctx, data.Login, repo, path, nil)
+	_, d, resp, err := client.Repositories.GetContents(ctx, owner, repo, path, nil)
 	// log.Println(resp)
 	if resp.StatusCode != 200 || err != nil {
 		return res, errors.New("File does not exist")
@@ -168,12 +188,11 @@ func getRepoFiles(tkn, repo, path string) (res []string, err error) {
 	return res, nil
 }
 
-func getFile(tkn, repo, fileName string) (string, error) {
-	data := getGithubData(tkn)
+func getFile(tkn, owner, repo, fileName string) (string, error) {
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
 
-	f, _, resp, err := client.Repositories.GetContents(ctx, data.Login, repo, fileName, nil)
+	f, _, resp, err := client.Repositories.GetContents(ctx, owner, repo, fileName, nil)
 	if resp.StatusCode != 200 || err != nil || f.Content == nil {
 		return "", errors.New("File does not exist")
 	}
@@ -184,19 +203,19 @@ func getFile(tkn, repo, fileName string) (string, error) {
 	return res, nil
 }
 
-func sendFile(tkn, repo, content, fileName, commitMessage string) error {
+func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
 	data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
 
-	f, _, resp, err := client.Repositories.GetContents(ctx, data.Login, repo, fileName, nil)
+	f, _, resp, err := client.Repositories.GetContents(ctx, owner, repo, fileName, nil)
 	if resp.StatusCode != 200 || err != nil {
 		opts := &github.RepositoryContentFileOptions{
 			Message:   github.String(commitMessage),
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.UpdateFile(ctx, data.Login, repo, fileName, opts)
+		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, fileName, opts)
 		if resp.StatusCode != 200 {
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {
@@ -211,7 +230,7 @@ func sendFile(tkn, repo, content, fileName, commitMessage string) error {
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.UpdateFile(ctx, data.Login, repo, fileName, opts)
+		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, fileName, opts)
 		if resp.StatusCode != 200 {
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {

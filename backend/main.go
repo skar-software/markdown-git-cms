@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	api "github-md-crm/pkg/api"
+	"log"
 
 	"github.com/aws/aws-lambda-go/events"
 	// "github.com/aws/aws-lambda-go/lambda"
@@ -32,6 +33,9 @@ func main() {
 	// 	fiberLambda = fiberadapter.New(app)
 	// 	lambda.Start(Handler)
 	// } else {
-	app.Listen(":3000")
+	err := app.Listen(":3000")
+	if err != nil {
+		log.Fatal(err)
+	}
 	// }
 }
