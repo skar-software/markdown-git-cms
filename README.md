@@ -1,4 +1,4 @@
-# Installation instructions*
+# Installation instructions
 **1) Run docker**
 
 docker pull anonranger/pubdeskmd
