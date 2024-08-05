@@ -19,6 +19,11 @@ Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained
 
 ![token-perm4](https://github.com/user-attachments/assets/c9d68906-10dd-47be-8ed1-3ae80faa5098)
 
+**Note: In Github profile, public email should have an email. If it does not exist, go to email settings and update.**
+
+![image](https://github.com/user-attachments/assets/3c949a76-3b62-4d0c-a064-efebc390167d)
+
+
 # Usage
 **1) open `localhost:3000` in your browser** 
   
