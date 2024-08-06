@@ -29,10 +29,10 @@
   async function handleSubmit(event: SubmitEvent) {
     const form = event.target as HTMLFormElement;
     const d = new FormData(form);
-    window.location.href = `/repos/${data.owner}/${data.rep}/${d.get("file")}/`;
-    let href = "/repos/{data.owner}/{data.rep}/{file.Path}/";
+    let repo = encodeURIComponent(data.rep);
+    // console.log();
+    window.location.href = `/repos/${data.owner}/${repo}/${d.get("file") + ".md"}`;
   }
-
   function OnClick(file: Dir) {
     // file.Path.indexOf("/") === 0 ? (file.Path = file.Path.slice(1)) : file.Path;
     data.rep = decodeURIComponent(data.rep).split("/").shift();
@@ -54,9 +54,9 @@
   <form on:submit|preventDefault={handleSubmit}>
     <label>
       <span>New file name</span>
-      <input name="file" />
+      <input name="file" />.md
     </label>
-    <button type="submit">Create new file</button>
+    <button>Create new file</button>
   </form>
   <table>
     <tr><p>---------------------</p></tr>

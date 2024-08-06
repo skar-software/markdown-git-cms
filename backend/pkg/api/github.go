@@ -186,7 +186,7 @@ func GithubSendFile(c *fiber.Ctx) error {
 		fmt.Println("Error decoding URL:", err)
 		return err
 	}
-	err = sendFile(tkn, payload.Owner, payload.Repo, payload.Content, decodedPath, fmt.Sprintf("Update %s", payload.File))
+	err = sendFile(tkn, payload.Owner, payload.Repo, payload.Content, decodedPath, fmt.Sprintf("Update %s", decodedPath))
 	log.Println(err)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
@@ -226,22 +226,20 @@ func getFile(tkn, owner, repo, fileName string) (string, error) {
 	return res, nil
 }
 
-func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
+func sendFile(tkn, owner, repo, content, Path, commitMessage string) error {
 	data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
-	fmt.Println("filename", fileName)
-	f, _, resp, err := client.Repositories.GetContents(ctx, owner, repo, fileName, nil)
+	f, _, resp, err := client.Repositories.GetContents(ctx, owner, repo, Path, nil)
 	if resp.StatusCode != 200 || err != nil {
-		fmt.Println("test1")
 		opts := &github.RepositoryContentFileOptions{
 			Message:   github.String(commitMessage),
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, fileName, opts)
-		if resp.StatusCode != 200 {
-			fmt.Println("test2")
+		repoParts := strings.SplitN(Path, "/", 2)
+		commit, resp, err := client.Repositories.CreateFile(ctx, owner, repo, repoParts[1], opts)
+		if resp.StatusCode != 201 {
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {
 			return err
@@ -249,14 +247,12 @@ func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
 		fmt.Println(commit)
 		return nil
 	} else {
-		fmt.Println("test3")
 		opts := &github.RepositoryContentFileOptions{
 			Message:   github.String(commitMessage),
 			SHA:       f.SHA,
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		fmt.Println("*f.Path", *f.Path)
 		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, *f.Path, opts)
 		if resp.StatusCode != 200 {
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
