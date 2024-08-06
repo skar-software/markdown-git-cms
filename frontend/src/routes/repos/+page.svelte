@@ -7,20 +7,30 @@
     Name: string;
     Owner: string;
   }
-
+  let page = 0;
   let r: Rep[] = [{ Name: "loading...", Owner: "" }];
+  let end = false;
   const url: string = "/api/rep";
   async function getReps(): Promise<Rep[]> {
     try {
       const response = await fetch(url);
       const res = JSON.parse(await response.text()) as Rep[];
       r = res;
+      page = 1;
     } catch (error) {
       console.error("Error:", error);
     }
     return r;
   }
-
+  async function loadMore() {
+    page++;
+    const response = await fetch(url + "?page=" + page);
+    const res = JSON.parse(await response.text()) as Rep[];
+    r = r.concat(res);
+    if (res.length === 0) {
+      end = true;
+    }
+  }
   onMount(async () => {
     await getReps();
   });
@@ -34,18 +44,21 @@
       {#if rep.Name !== ""}
         <tr>
           {#if rep.Name === "loading..."}
-                        <p class="button">{rep.Name}</p>
-                    {:else}
-          <a
-            href="/repos/{rep.Owner}/{rep.Name}/"
-            class="button">{rep.Name}</a
-          >
+            <p class="button">{rep.Name}</p>
+          {:else}
+            <a
+              href="/repos/{rep.Owner}/{rep.Name}/"
+              class="button">{rep.Name}</a
+            >
           {/if}
         </tr>
         <tr><p>---------------------</p></tr>
       {/if}
     {/each}
   </table>
+  {#if !end}
+    <button on:click={loadMore}>LOAD MORE</button>
+  {/if}
 </main>
 
 <style>

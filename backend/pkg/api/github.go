@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -107,26 +108,18 @@ func GithubSetToken(c *fiber.Ctx) error {
 
 func GithubMyRepos(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
-	// data := getGithubData(tkn)
+	page := c.Query("page")
+	pageInt, err := strconv.Atoi(page)
+	if err != nil {
+		pageInt = 1
+	}
 	client := github.NewClient(nil).WithAuthToken(tkn)
-	listOpts := github.ListOptions{Page: 1, PerPage: 100}
+	listOpts := github.ListOptions{Page: pageInt, PerPage: 10}
 	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Affiliation: "owner,collaborator,organization_member", ListOptions: listOpts}
 	list, _, err := client.Repositories.ListByAuthenticatedUser(context.Background(), &opts)
 	if err != nil {
 		return c.Status(200).SendString(fmt.Sprintf("error, %e", err))
 	}
-
-	// Fetch repositories from organizations the user belongs to
-	// ctx := context.Background()
-	// opt := github.ListOptions{
-	// 	PerPage: 1000,
-	// }
-	// orgs, _, err := client.Organizations.List(ctx, "", &opt)
-	// if err != nil {
-	// 	// Handle error
-	// 	return err
-	// }
-	// log.Println(orgs)
 
 	r := []Repo{}
 	for _, l := range list {
