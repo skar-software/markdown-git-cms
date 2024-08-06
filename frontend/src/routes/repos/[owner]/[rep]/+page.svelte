@@ -4,17 +4,19 @@
   import { onMount } from "svelte";
   export let data;
 
-  let r = ["loading..."];
+  interface Dir {
+    Path: string;
+    Type: string;
+  }
+
+  let r: Dir[] = [{ Path: "loading...", Type: "" }];
   const url: string = "/api/files?";
-  async function getReps(): Promise<Array<any>> {
+  async function getReps(): Promise<Dir[]> {
     try {
       const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: data.rep }).toString());
-      const res = JSON.parse(await response.text()) as string[];
-      res.forEach((s) => {
-        r.push(s);
-      });
-      r[0] = "";
-      console.log(r);
+      const res = JSON.parse(await response.text()) as Dir[];
+      r = res;
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -24,12 +26,26 @@
   onMount(async () => {
     await getReps();
   });
-  console.log("test");
   async function handleSubmit(event: SubmitEvent) {
     const form = event.target as HTMLFormElement;
     const d = new FormData(form);
-    console.log("🍷 ~ data.owner:", data.owner);
     window.location.href = `/repos/${data.owner}/${data.rep}/${d.get("file")}/`;
+    let href = "/repos/{data.owner}/{data.rep}/{file.Path}/";
+  }
+
+  function OnClick(file: Dir) {
+    // file.Path.indexOf("/") === 0 ? (file.Path = file.Path.slice(1)) : file.Path;
+    data.rep = decodeURIComponent(data.rep).split("/").shift();
+    file.Path = encodeURIComponent(data.rep + "/" + file.Path);
+    if (file.Type === "dir") {
+      window.location.href = `/repos/${data.owner}/${file.Path}`;
+    } else if (file.Type === "file") {
+      const lastIndex = file.Path.lastIndexOf("%2F");
+      if (lastIndex !== -1) {
+        file.Path = file.Path.substring(0, lastIndex) + "/" + file.Path.substring(lastIndex + 3);
+      }
+      window.location.href = `/repos/${data.owner}/${file.Path}`;
+    }
   }
 </script>
 
@@ -40,23 +56,22 @@
       <span>New file name</span>
       <input name="file" />
     </label>
-    <!-- <button type="submit">Create new file</button> -->
+    <button type="submit">Create new file</button>
   </form>
   <table>
     <tr><p>---------------------</p></tr>
     {#each r as file}
-      {#if file !== ""}
+      {#if file.Path !== ""}
         <tr>
-          {#if file === "loading..."}
-            <p class="button">{file}</p>
+          {#if file.Path === "loading..."}
+            <p class="button">{file.Path}</p>
           {:else}
-            <a
-              href="/repos/{data.owner}/{data.rep}/{file}/"
-              class="button">{file}</a
+            <button
+              class="button"
+              on:click={() => OnClick(file)}>{file.Path}</button
             >
           {/if}
         </tr>
-        <tr><p>---------------------</p></tr>
       {/if}
     {/each}
   </table>

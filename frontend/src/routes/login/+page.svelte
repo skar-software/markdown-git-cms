@@ -4,9 +4,6 @@
     async function handleSubmit(event: SubmitEvent) {
       const form = event.target as HTMLFormElement;
       const data = new FormData(form);
-
-      console.log(data);
-      console.log(data.get("tkn"));
   
       let url = '/api/set/?';
       let tknVal = data.get("tkn")?.toString();
@@ -16,7 +13,6 @@
       const response = await fetch(url  + new URLSearchParams({tkn: tknVal}).toString(), {
         method: 'Get',
       });
-      console.log(response.status);
       if (response.status !== 200) {
         err = await response.text();
       } else {

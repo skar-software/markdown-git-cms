@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/go-github/v62/github"
@@ -35,6 +37,11 @@ type GitHubMeStruct struct {
 type Repo struct {
 	Name  string
 	Owner string
+}
+
+type Dir struct {
+	Path string
+	Type string
 }
 
 // func GetGithubEnv() Github {
@@ -102,7 +109,8 @@ func GithubMyRepos(c *fiber.Ctx) error {
 	tkn := c.Cookies("tkn")
 	// data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
-	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Affiliation: "owner,collaborator,organization_member"}
+	listOpts := github.ListOptions{Page: 1, PerPage: 100}
+	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Affiliation: "owner,collaborator,organization_member", ListOptions: listOpts}
 	list, _, err := client.Repositories.ListByAuthenticatedUser(context.Background(), &opts)
 	if err != nil {
 		return c.Status(200).SendString(fmt.Sprintf("error, %e", err))
@@ -132,7 +140,14 @@ func GithubRepoFiles(c *fiber.Ctx) error {
 	repoName := c.Query("repo")
 	owner := c.Query("owner")
 
-	res, err := getRepoFiles(tkn, repoName, owner, "/")
+	repoParts := strings.SplitN(repoName, "/", 2)
+	var path string
+	if len(repoParts) > 1 {
+		path = "/" + repoParts[1]
+	} else {
+		path = "/"
+	}
+	res, err := getRepoFiles(tkn, repoParts[0], owner, path)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
 	}
@@ -145,7 +160,15 @@ func GithubRepoFile(c *fiber.Ctx) error {
 	repoName := c.Query("repo")
 	path := c.Query("path")
 
-	res, err := getFile(tkn, owner, repoName, path)
+	decodedPath, err := url.QueryUnescape(path)
+	if err != nil {
+		fmt.Println("Error decoding URL:", err)
+		return err
+	}
+
+	fmt.Println("path", decodedPath)
+
+	res, err := getFile(tkn, owner, repoName, decodedPath)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
 	}
@@ -158,8 +181,12 @@ func GithubSendFile(c *fiber.Ctx) error {
 	if err := c.BodyParser(&payload); err != nil {
 		return err
 	}
-
-	err := sendFile(tkn, payload.Owner, payload.Repo, payload.Content, payload.File, fmt.Sprintf("Update %s", payload.File))
+	decodedPath, err := url.QueryUnescape(payload.File)
+	if err != nil {
+		fmt.Println("Error decoding URL:", err)
+		return err
+	}
+	err = sendFile(tkn, payload.Owner, payload.Repo, payload.Content, decodedPath, fmt.Sprintf("Update %s", payload.File))
 	log.Println(err)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
@@ -167,25 +194,21 @@ func GithubSendFile(c *fiber.Ctx) error {
 	return c.Status(200).SendString("success")
 }
 
-func getRepoFiles(tkn, repo, owner, path string) (res []string, err error) {
+func getRepoFiles(tkn, repo, owner, path string) (res []Dir, err error) {
 	// data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
+	opts := github.RepositoryContentGetOptions{}
+	_, d, resp, err := client.Repositories.GetContents(ctx, owner, repo, path, &opts)
 
-	_, d, resp, err := client.Repositories.GetContents(ctx, owner, repo, path, nil)
-	// log.Println(resp)
 	if resp.StatusCode != 200 || err != nil {
 		return res, errors.New("File does not exist")
 	}
+	data := []Dir{}
 	for _, fd := range d {
-		if fd.GetType() == "file" {
-			res = append(res, fd.GetPath())
-		}
+		data = append(data, Dir{Path: fd.GetPath(), Type: fd.GetType()})
 	}
-	if err != nil {
-		return res, err
-	}
-	return res, nil
+	return data, nil
 }
 
 func getFile(tkn, owner, repo, fileName string) (string, error) {
@@ -207,9 +230,10 @@ func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
 	data := getGithubData(tkn)
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	ctx := context.Background()
-
+	fmt.Println("filename", fileName)
 	f, _, resp, err := client.Repositories.GetContents(ctx, owner, repo, fileName, nil)
 	if resp.StatusCode != 200 || err != nil {
+		fmt.Println("test1")
 		opts := &github.RepositoryContentFileOptions{
 			Message:   github.String(commitMessage),
 			Content:   []byte(content),
@@ -217,6 +241,7 @@ func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
 		}
 		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, fileName, opts)
 		if resp.StatusCode != 200 {
+			fmt.Println("test2")
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {
 			return err
@@ -224,13 +249,15 @@ func sendFile(tkn, owner, repo, content, fileName, commitMessage string) error {
 		fmt.Println(commit)
 		return nil
 	} else {
+		fmt.Println("test3")
 		opts := &github.RepositoryContentFileOptions{
 			Message:   github.String(commitMessage),
 			SHA:       f.SHA,
 			Content:   []byte(content),
 			Committer: &github.CommitAuthor{Name: github.String(data.Login), Email: github.String(data.Email)},
 		}
-		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, fileName, opts)
+		fmt.Println("*f.Path", *f.Path)
+		commit, resp, err := client.Repositories.UpdateFile(ctx, owner, repo, *f.Path, opts)
 		if resp.StatusCode != 200 {
 			return errors.New(fmt.Sprintf("Error updating file: %s", resp.Status))
 		} else if err != nil {

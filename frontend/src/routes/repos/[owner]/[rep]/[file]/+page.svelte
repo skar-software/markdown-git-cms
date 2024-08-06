@@ -10,13 +10,17 @@
   // {sanitizer: mySanitizer}
   const carta = new Carta();
   let value = "";
+  let globalRepo: string;
+  let globalPath: string;
 
   const url: string = "/api/file?";
   async function getReps(): Promise<Array<any>> {
     try {
-      const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: data.rep, path: data.file }).toString());
+      let repoPath = data.rep.substring(data.rep.split("/")[0].length + 1);
+      globalPath = encodeURIComponent((repoPath && "/") + repoPath + "/" + data.file)
+      globalRepo = data.rep.split("/").shift();
+      const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: globalRepo, path: globalPath }).toString());
       if (response.status !== 200) {
-        console.log("new file");
       } else {
         value = await response.text();
       }
@@ -33,16 +37,14 @@
   let url2 = "/api/upl";
   async function SendFile() {
     let formData = new FormData();
-    formData.append("file", data.file);
+    formData.append("file", globalPath);
     formData.append("content", value);
     formData.append("owner", data.owner);
-    formData.append("repo", data.rep);
-    console.log(formData);
+    formData.append("repo", globalRepo);
     const response = await fetch(url2, {
       method: "POST",
       body: formData,
     });
-    console.log(response.status);
     window.location.reload();
   }
 </script>

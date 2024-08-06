@@ -15,7 +15,6 @@
       const response = await fetch(url);
       const res = JSON.parse(await response.text()) as Rep[];
       r = res;
-      r.shift();
     } catch (error) {
       console.error("Error:", error);
     }
