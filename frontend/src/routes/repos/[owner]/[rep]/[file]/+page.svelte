@@ -67,10 +67,11 @@
   :global(.my-h1) {
     color: #415a77;
     text-decoration: underline;
-    font-size: 3em;
+    font-size: 2em;
     font-weight: 600;
     font-family: poppins;
     text-align: center;
+    margin-top: 0;
   }
   :global(.main) {
     padding: 1em;
@@ -79,6 +80,12 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+
+    text-align:left;
+    max-width: 100vw;
+    justify-content:flex-start;
+    align-items:normal;
+    margin-top: 0;
   }
   :global(.button) {
     padding: 15px 30px 15px 30px;

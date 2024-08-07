@@ -18,6 +18,7 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 0;
 }
 
 @media (min-width: 640px) {
@@ -29,7 +30,8 @@ main {
 h1 {
     color: #415a77;
     text-decoration: underline;
-    font-size: 3em;
+    font-size: 2em;
+    margin-top: 0;
     font-weight: 600;
 }
 

@@ -1,9 +1,17 @@
-<script>
+<script lang="ts">
+  function handleOnClick(route: string) {
+    window.location.href = route;
+  }
 </script>
 
 <div class="app">
   <header>
-    <pre> <a href="/login">Connect</a>  |  <a href="/repos">Repos</a>  |  <a href="/repos">Markdown Editor</a>  |  <a href="/repos">Help</a></pre>
+    <div>
+      <button class="header-button" on:click={() => handleOnClick("/login")}>Connect</button> |
+      <button class="header-button" on:click={() => handleOnClick("/repos")}>Repos</button> |
+      <button class="header-button" on:click={() => handleOnClick("/repos")}>Markdown Editor</button> |
+      <button class="header-button" on:click={() => handleOnClick("/repos")}>Help</button>
+    </div>
   </header>
   <main>
     <slot />
@@ -33,10 +41,11 @@
 </div>
 
 <style>
-
-  header{
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     padding: 10px;
-    direction: rtl;
     background-color: #edede9;
   }
   * {
@@ -49,6 +58,8 @@
   }
 
   main {
+    margin: 0;
+    padding: 0;
     width: 100%;
   }
   .foot,
@@ -57,10 +68,10 @@
     font-size: 1rem;
   }
   footer {
-	overflow-x: hidden;
-	position: fixed;
-	bottom: 0%;
-	width: 100vw;
+    overflow-x: hidden;
+    position: fixed;
+    bottom: 0%;
+    width: 100vw;
     background: #778da9;
     color: aliceblue;
     display: flex;
@@ -72,17 +83,21 @@
   footer a {
     font-weight: bold;
     color: aliceblue;
-    text-decoration: none;
+    text-decoration-color: aliceblue;
   }
-  
+
   @media (min-width: 480px) {
     footer {
       padding: 12px 0;
     }
   }
-  header pre a{
+  header div .header-button {
+    background-color: transparent;
+    outline: none;
+    border: none;
     font-size: 1rem;
     color: #415a77;
     font-weight: 600;
+    padding: 0 10px;
   }
 </style>
