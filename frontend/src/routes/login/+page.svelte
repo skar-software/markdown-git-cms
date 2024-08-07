@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../../style.css"
     let err = "";
 
     async function handleSubmit(event: SubmitEvent) {
@@ -26,7 +27,7 @@
 <form on:submit|preventDefault={handleSubmit}>
   <label>
     <span>Github token</span>
-    <input type="password" name="tkn" />
+    <input class="file-input" type="password" name="tkn" />
   </label>
   <button type="submit">Set token</button>
   {#if err !== ''}
@@ -35,26 +36,3 @@
 </form>
 
 </main>
-  
-
-<style>
-    main {
-        text-align: center;
-        padding: 1em;
-        max-width: 240px;
-        margin: 0 auto;
-    }
-
-    h1 {
-        color: #ff3e00;
-        text-transform: uppercase;
-        font-size: 4em;
-        font-weight: 100;
-    }
-
-    @media (min-width: 640px) {
-        main {
-            max-width: none;
-        }
-    }
-</style>

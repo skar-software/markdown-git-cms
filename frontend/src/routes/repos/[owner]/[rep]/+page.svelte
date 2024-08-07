@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import "../../../../style.css";
   export let data;
 
   interface Dir {
@@ -16,7 +17,6 @@
       const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: data.rep }).toString());
       const res = JSON.parse(await response.text()) as Dir[];
       r = res;
-
     } catch (error) {
       console.error("Error:", error);
     }
@@ -51,58 +51,36 @@
 
 <main>
   <h1>Choose file from {data.rep} repository</h1>
-  <form on:submit|preventDefault={handleSubmit}>
-    <label>
-      <span>New file name</span>
-      <input name="file" />.md
-    </label>
-    <button>Create new file</button>
+  <form
+    class="file-form"
+    on:submit|preventDefault={handleSubmit}
+  >
+    <span>New file name</span>
+    <input
+      class="file-input"
+      name="file"
+      type="text"
+      value=".md"
+    />
+    <button class="file-button">Create new file</button>
   </form>
-  <table>
-    <tr><p>---------------------</p></tr>
+  <ul>
     {#each r as file}
       {#if file.Path !== ""}
-        <tr>
+        <li>
           {#if file.Path === "loading..."}
             <p class="button">{file.Path}</p>
           {:else}
-            <button
-              class="button"
-              on:click={() => OnClick(file)}>{file.Path}</button
-            >
+            <div class="file-object">
+              <p>{file.Type}</p>
+              <button
+                class="file-button"
+                on:click={() => OnClick(file)}>{file.Path}</button
+              >
+            </div>
           {/if}
-        </tr>
+        </li>
       {/if}
     {/each}
-  </table>
+  </ul>
 </main>
-
-<style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 3em;
-    font-weight: 100;
-  }
-
-  table {
-    color: #ff3e00;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.5em;
-    font-weight: 100;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
-</style>

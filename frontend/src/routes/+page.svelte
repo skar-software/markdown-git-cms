@@ -1,42 +1,27 @@
 <script>
+  import { browser } from "$app/environment";
+  import '../style.css';
 
+  // Function to parse cookies and extract the token
+  // @ts-ignore
+  function getCookie(name) {
+    if (browser && document.cookie) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      // @ts-ignore
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+  }
+
+  // Extract the token from cookies
+  const token = browser ? getCookie("tkn") : null;
 </script>
 
 <main>
-<h1>Hey, login to your gihub!</h1>
-<table>
-    <tr><a href="/repos">already, go to repos</a></tr>
-    <tr><p>---------------------</p></tr>
-    <tr><a href="/login">login</a></tr>
-</table>
+  <h1>Hey, login to your gihub!</h1>
+  {#if token}
+    <a href="/repos">go to repos</a>
+  {:else}
+    <a href="/login">login</a>
+  {/if}
 </main>
-
-<style>
-    main {
-        text-align: center;
-        padding: 1em;
-        max-width: 240px;
-        margin: 0 auto;
-    }
-
-    table {
-        color: #ff3e00;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 2em;
-        font-weight: 100;
-    }
-
-    h1 {
-        color: #ff3e00;
-        text-transform: uppercase;
-        font-size: 3em;
-        font-weight: 100;
-    }
-
-    @media (min-width: 640px) {
-        main {
-            max-width: none;
-        }
-    }
-</style>

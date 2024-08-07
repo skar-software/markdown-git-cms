@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import "../../style.css";
 
   interface Rep {
     Name: string;
@@ -38,11 +39,10 @@
 
 <main>
   <h1>Choose your repository</h1>
-  <table>
-    <tr><p>---------------------</p></tr>
+  <ul>
     {#each r as rep}
       {#if rep.Name !== ""}
-        <tr>
+        <li>
           {#if rep.Name === "loading..."}
             <p class="button">{rep.Name}</p>
           {:else}
@@ -51,42 +51,12 @@
               class="button">{rep.Name}</a
             >
           {/if}
-        </tr>
-        <tr><p>---------------------</p></tr>
+        </li>
+        <!-- <tr><p>---------------------</p></tr> -->
       {/if}
     {/each}
-  </table>
-  {#if !end}
-    <button on:click={loadMore}>LOAD MORE</button>
-  {/if}
+    {#if !end}
+      <button on:click={loadMore}>LOAD MORE</button>
+    {/if}
+  </ul>
 </main>
-
-<style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 3em;
-    font-weight: 100;
-  }
-
-  table {
-    color: #ff3e00;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.5em;
-    font-weight: 100;
-  }
-
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
-</style>

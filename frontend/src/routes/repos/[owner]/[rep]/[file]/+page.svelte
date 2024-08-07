@@ -5,7 +5,6 @@
   export let data;
   import { Carta, MarkdownEditor } from "carta-md";
   import "carta-md/default.css";
-
   // Remember to use a sanitizer to prevent XSS attacks
   // {sanitizer: mySanitizer}
   const carta = new Carta();
@@ -17,7 +16,7 @@
   async function getReps(): Promise<Array<any>> {
     try {
       let repoPath = data.rep.substring(data.rep.split("/")[0].length + 1);
-      globalPath = encodeURIComponent((repoPath && "/") + repoPath + "/" + data.file)
+      globalPath = encodeURIComponent((repoPath && "/") + repoPath + "/" + data.file);
       globalRepo = data.rep.split("/").shift();
       const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: globalRepo, path: globalPath }).toString());
       if (response.status !== 200) {
@@ -59,13 +58,39 @@
 </main>
 
 <style>
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 3em;
-    font-weight: 100;
+  * {
+    font-family: poppins;
   }
+  h1 {
+    color: #415a77;
+    text-decoration: underline;
+    font-size: 3em;
+    font-weight: 600;
+    font-family: poppins;
+    text-align: center;
+  }
+  main {
+    padding: 1em;
+    margin: 0 auto;
+    background-color: #edede9;
+    min-height: 100%;
 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  button {
+    padding: 15px 30px 15px 30px;
+    background-color: #415a77;
+    color: #edede9;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    margin: 20px auto;
+  }
   @media (min-width: 640px) {
     main {
       max-width: none;

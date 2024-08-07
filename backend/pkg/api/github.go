@@ -159,8 +159,6 @@ func GithubRepoFile(c *fiber.Ctx) error {
 		return err
 	}
 
-	fmt.Println("path", decodedPath)
-
 	res, err := getFile(tkn, owner, repoName, decodedPath)
 	if err != nil {
 		return c.Status(400).SendString(fmt.Sprintf("error, %e", err))
