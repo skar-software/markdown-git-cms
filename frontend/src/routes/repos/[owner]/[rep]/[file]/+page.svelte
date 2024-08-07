@@ -17,7 +17,7 @@
     try {
       let repoPath = data.rep.substring(data.rep.split("/")[0].length + 1);
       globalPath = encodeURIComponent((repoPath && "/") + repoPath + "/" + data.file);
-      globalRepo = data.rep.split("/").shift();
+      globalRepo = (data.rep.split("/") ?? [""])[0];
       const response = await fetch(url + new URLSearchParams({ owner: data.owner, repo: globalRepo, path: globalPath }).toString());
       if (response.status !== 200) {
       } else {
@@ -48,20 +48,23 @@
   }
 </script>
 
-<main>
+<main class="main">
   <h1 class="my-h1">File {data.rep}/{data.file}</h1>
   <MarkdownEditor
     {carta}
     bind:value
   />
-  <button on:click={SendFile}>Update file</button>
+  <button
+    class="button"
+    on:click={SendFile}>Update file</button
+  >
 </main>
 
 <style>
   * {
     font-family: poppins;
   }
-  h1 {
+  :global(.my-h1) {
     color: #415a77;
     text-decoration: underline;
     font-size: 3em;
@@ -69,17 +72,15 @@
     font-family: poppins;
     text-align: center;
   }
-  main {
+  :global(.main) {
     padding: 1em;
     margin: 0 auto;
     background-color: #edede9;
-    min-height: 100%;
-
     height: 100%;
     display: flex;
     flex-direction: column;
   }
-  button {
+  :global(.button) {
     padding: 15px 30px 15px 30px;
     background-color: #415a77;
     color: #edede9;
@@ -91,9 +92,9 @@
     cursor: pointer;
     margin: 20px auto;
   }
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
+  :global(.carta-font-code) {
+	font-family: '...', monospace;
+	font-size: 1.1rem;
+	line-height: 1.25rem;
+}
 </style>

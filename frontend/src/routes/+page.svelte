@@ -1,6 +1,6 @@
 <script>
   import { browser } from "$app/environment";
-  import '../style.css';
+  import "../style.css";
 
   // Function to parse cookies and extract the token
   // @ts-ignore
