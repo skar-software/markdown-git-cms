@@ -2,6 +2,9 @@
 </script>
 
 <div class="app">
+  <header>
+    <pre> <a href="/login">Connect</a>  |  <a href="/repos">Repos</a>  |  <a href="/repos">Markdown Editor</a>  |  <a href="/repos">Help</a></pre>
+  </header>
   <main>
     <slot />
   </main>
@@ -30,6 +33,12 @@
 </div>
 
 <style>
+
+  header{
+    padding: 10px;
+    direction: rtl;
+    background-color: #edede9;
+  }
   * {
     font-family: poppins;
   }
@@ -65,10 +74,15 @@
     color: aliceblue;
     text-decoration: none;
   }
-
+  
   @media (min-width: 480px) {
     footer {
       padding: 12px 0;
     }
+  }
+  header pre a{
+    font-size: 1rem;
+    color: #415a77;
+    font-weight: 600;
   }
 </style>

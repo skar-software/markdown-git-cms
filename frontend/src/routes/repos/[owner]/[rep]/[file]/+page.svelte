@@ -61,6 +61,9 @@
 </main>
 
 <style>
+    * {
+    font-family: poppins;
+  }
   :global(.my-h1) {
     color: #415a77;
     text-decoration: underline;
@@ -88,6 +91,7 @@
     border-radius: 24px;
     cursor: pointer;
     margin: 20px auto;
+    margin-bottom: 70px;
   }
   :global(.carta-font-code) {
 	font-family: '...', monospace;
