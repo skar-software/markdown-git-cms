@@ -35,7 +35,7 @@ B) Profile -> Settings -> Developer Settings -> Personal Access Token (Classic t
 
 ![token-perm4](https://github.com/user-attachments/assets/c9d68906-10dd-47be-8ed1-3ae80faa5098)
 
-**Classic Token (for Organization repos)**
+**B Classic Token (for Organization repos)**
 
 ![token-classic-org](https://github.com/user-attachments/assets/02e74856-36b7-4f91-ba0f-e48a66ca24b6)
 
