@@ -6,10 +6,14 @@
 # Installation instructions
 **1) Run docker**
 
+```
 docker pull anonranger/pubdeskmd
+```
 
+```
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
-   
+```
+
 **2) Create a Personal Access Token**
 
 Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token)
