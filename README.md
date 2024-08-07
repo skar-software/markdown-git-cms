@@ -37,7 +37,9 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 
 **B Classic Token (for Organization repos)**
 
-![token-classic-org](https://github.com/user-attachments/assets/02e74856-36b7-4f91-ba0f-e48a66ca24b6)
+![token-classic-org1](https://github.com/user-attachments/assets/6eca3d22-b198-4d9c-bae2-b52024def856)
+
+![token-classic-org2](https://github.com/user-attachments/assets/354a194f-f722-4078-8f00-4a992e954471)
 
 
 **Note: In Github profile, public email should have an email. If it does not exist, go to email settings and update.**
