@@ -61,9 +61,6 @@
 </main>
 
 <style>
-  * {
-    font-family: poppins;
-  }
   :global(.my-h1) {
     color: #415a77;
     text-decoration: underline;

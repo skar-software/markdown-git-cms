@@ -64,7 +64,7 @@
     />
     <button class="file-button">Create new file</button>
   </form>
-  <ul>
+  <ul style="margin-bottom: 50px;">
     {#each r as file}
       {#if file.Path !== ""}
         <li>

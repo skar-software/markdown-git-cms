@@ -56,7 +56,7 @@
       {/if}
     {/each}
     {#if !end}
-      <button on:click={loadMore}>LOAD MORE</button>
+      <button style="margin-bottom: 50px;" on:click={loadMore}>LOAD MORE</button>
     {/if}
   </ul>
 </main>
