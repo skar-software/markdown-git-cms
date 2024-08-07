@@ -1,7 +1,10 @@
+# PubdeskMD
+
+## Markdown editor with Github integration - to edit and update files
+
  ![markdown-md-file](https://github.com/user-attachments/assets/b5ba085d-00ad-441a-8af9-ffd48c4efbb0) 
  
-# PubdeskMD
-## Markdown editor with Github integration - to edit and update files
+
 
 # Installation instructions
 **1) Run docker**
