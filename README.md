@@ -4,8 +4,6 @@
 
  ![markdown-md-file](https://github.com/user-attachments/assets/b5ba085d-00ad-441a-8af9-ffd48c4efbb0) 
  
-
-
 # Installation instructions
 **1) Run docker**
 
