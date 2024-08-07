@@ -17,11 +17,11 @@ docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
 
 **2) Create a Personal Access Token**
 
-A) Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token) - for **Personal** repos
+A) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token) - for **Personal** repos
 
 OR
 
-B) Profile -> Settings -> Developer Settings -> Personal Access Token (Classic token) - for **Organization** repos
+B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (Classic token) - for **Organization** repos
 
 **A Fine grained Token (for Personal repos)**
 
