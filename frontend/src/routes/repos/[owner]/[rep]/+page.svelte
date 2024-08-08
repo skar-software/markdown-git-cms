@@ -26,16 +26,37 @@
   onMount(async () => {
     await getReps();
   });
+
+  async function CreateFile(filename: string) {
+    let formData = new FormData();
+    formData.append("file", decodeURIComponent(data.rep) + "/" + filename);
+    formData.append("content", "");
+    formData.append("owner", data.owner);
+    let globalRepo = decodeURIComponent(data.rep).split("/").shift();
+    formData.append("repo", globalRepo ?? "");
+    const response = await fetch("/api/upl", {
+      method: "POST",
+      body: formData,
+    });
+    if (response.status === 200) {
+      alert("File created successfully");
+      window.location.reload();
+    } else {
+      alert("Error creating file");
+      console.error("Error:", response);
+    }
+  }
+
   async function handleSubmit(event: SubmitEvent) {
     const form = event.target as HTMLFormElement;
     const d = new FormData(form);
     let repo = encodeURIComponent(data.rep);
-    // console.log();
-    window.location.href = `/repos/${data.owner}/${repo}/${d.get("file") + ".md"}`;
+    CreateFile(d.get("file")?.toString() ?? "");
+    // window.location.href = `/repos/${data.owner}/${repo}/${d.get("file") + ".md"}`;
   }
   function OnClick(file: Dir) {
     // file.Path.indexOf("/") === 0 ? (file.Path = file.Path.slice(1)) : file.Path;
-    data.rep = decodeURIComponent(data.rep).split("/").shift();
+    data.rep = decodeURIComponent(data.rep).split("/").shift() ?? "";
     file.Path = encodeURIComponent(data.rep + "/" + file.Path);
     if (file.Type === "dir") {
       window.location.href = `/repos/${data.owner}/${file.Path}`;

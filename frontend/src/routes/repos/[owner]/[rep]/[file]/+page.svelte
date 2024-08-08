@@ -44,7 +44,13 @@
       method: "POST",
       body: formData,
     });
-    window.location.reload();
+    if (response.status === 200) {
+      alert("File successfully updated and committed to Github.");
+      window.location.reload();
+    } else {
+      alert("Error updating file");
+      console.error("Error:", response);
+    }
   }
 </script>
 

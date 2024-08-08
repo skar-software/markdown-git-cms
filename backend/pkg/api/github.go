@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -80,16 +81,20 @@ type Dir struct {
 // 		return c.Status(400).SendString("error - bad state")
 // 	}
 
-// 	tkn := getGithubAccessToken(code)
-// 	if tkn == "" {
-// 		return c.Status(400).SendString("error")
-// 	}
-// 	c.Cookie(&fiber.Cookie{
-// 		Name:  "tkn",
-// 		Value: tkn,
-// 	})
-// 	return c.Redirect("/repos", http.StatusTemporaryRedirect)
-// }
+//		tkn := getGithubAccessToken(code)
+//		if tkn == "" {
+//			return c.Status(400).SendString("error")
+//		}
+//		c.Cookie(&fiber.Cookie{
+//			Name:  "tkn",
+//			Value: tkn,
+//		})
+//		return c.Redirect("/repos", http.StatusTemporaryRedirect)
+//	}
+func isMarkdownFile(filename string) bool {
+	ext := filepath.Ext(filename)
+	return strings.ToLower(ext) == ".md"
+}
 
 func GithubSetToken(c *fiber.Ctx) error {
 	tkn := c.Query("tkn")
@@ -197,7 +202,13 @@ func getRepoFiles(tkn, repo, owner, path string) (res []Dir, err error) {
 	}
 	data := []Dir{}
 	for _, fd := range d {
-		data = append(data, Dir{Path: fd.GetPath(), Type: fd.GetType()})
+		if fd.GetType() == "file" {
+			if isMarkdownFile(fd.GetName()) {
+				data = append(data, Dir{Path: fd.GetPath(), Type: fd.GetType()})
+			}
+		} else if fd.GetType() == "dir" {
+			data = append(data, Dir{Path: fd.GetPath(), Type: fd.GetType()})
+		}
 	}
 	return data, nil
 }

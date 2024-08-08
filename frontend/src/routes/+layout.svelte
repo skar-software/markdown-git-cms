@@ -1,16 +1,35 @@
 <script lang="ts">
-  function handleOnClick(route: string) {
-    window.location.href = route;
+  function handleOnClick(route: string, type = "normal") {
+    if (type === "normal") {
+      window.location.href = route;
+    } else if (type === "help") {
+      window.open(route, "_blank");
+    }
   }
 </script>
 
 <div class="app">
   <header>
     <div>
-      <button class="header-button" on:click={() => handleOnClick("/login")}>Connect</button> |
-      <button class="header-button" on:click={() => handleOnClick("/repos")}>Repos</button> |
-      <button class="header-button" on:click={() => handleOnClick("/repos")}>Markdown Editor</button> |
-      <button class="header-button" on:click={() => handleOnClick("/repos")}>Help</button>
+      <button
+        class="header-button"
+        on:click={() => handleOnClick("/login")}>Connect</button
+      >
+      |
+      <button
+        class="header-button"
+        on:click={() => handleOnClick("/repos")}>Repos</button
+      >
+      |
+      <button
+        class="header-button"
+        on:click={() => handleOnClick("/repos")}>Markdown Editor</button
+      >
+      |
+      <button
+        class="header-button"
+        on:click={() => handleOnClick("https://skar-software.github.io/pubdeskmd", "help")}>Help</button
+      >
     </div>
   </header>
   <main>
