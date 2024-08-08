@@ -1,5 +1,6 @@
 <script>
   import { browser } from "$app/environment";
+  import { onMount } from "svelte";
   import "../style.css";
 
   // Function to parse cookies and extract the token
@@ -15,13 +16,15 @@
 
   // Extract the token from cookies
   const token = browser ? getCookie("tkn") : null;
+  onMount(() => {
+    if (browser) {
+      if (token === null) {
+        window.location.href = "/login";
+      } else {
+        window.location.href = "/repos";
+      }
+    }
+  });
 </script>
 
-<main>
-  <h1>Hey, login to your gihub!</h1>
-  {#if token}
-    <a href="/repos">go to repos</a>
-  {:else}
-    <a href="/login">login</a>
-  {/if}
-</main>
+<main></main>

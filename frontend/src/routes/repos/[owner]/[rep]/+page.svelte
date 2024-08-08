@@ -5,6 +5,12 @@
   import "../../../../style.css";
   export let data;
 
+  import { getContext } from "svelte";
+
+  const titleStore = getContext("title");
+  // Update the title when this component is mounted
+  titleStore.set(`Choose file from ${data.rep} repository`);
+
   interface Dir {
     Path: string;
     Type: string;
@@ -55,6 +61,7 @@
     // window.location.href = `/repos/${data.owner}/${repo}/${d.get("file") + ".md"}`;
   }
   function OnClick(file: Dir) {
+    titleStore.set("");
     // file.Path.indexOf("/") === 0 ? (file.Path = file.Path.slice(1)) : file.Path;
     data.rep = decodeURIComponent(data.rep).split("/").shift() ?? "";
     file.Path = encodeURIComponent(data.rep + "/" + file.Path);
@@ -71,7 +78,6 @@
 </script>
 
 <main>
-  <h1>Choose file from {data.rep} repository</h1>
   <form
     class="file-form"
     on:submit|preventDefault={handleSubmit}
@@ -85,23 +91,58 @@
     />
     <button class="file-button">Create new file</button>
   </form>
-  <ul style="margin-bottom: 50px;">
-    {#each r as file}
+  <table>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+    </tr>
+    {#each r as file, i}
       {#if file.Path !== ""}
-        <li>
-          {#if file.Path === "loading..."}
-            <p class="button">{file.Path}</p>
-          {:else}
-            <div class="file-object">
-              <p>{file.Type}</p>
+        <tr>
+          {#if file.Path !== "loading..."}
+            <td>{i + 1}</td>
+            <td>
               <button
-                class="file-button"
-                on:click={() => OnClick(file)}>{file.Path}</button
+                on:click={() => OnClick(file)}
+                class="repo-button"
               >
-            </div>
+                {#if file.Type === "dir"}
+                  <img
+                    style="margin-right: 10px;"
+                    src="/folder.svg"
+                    alt="folder"
+                  />
+                {:else}
+                  <img
+                    style="margin-right: 10px;"
+                    src="/markdown.svg"
+                    alt="markdown"
+                  />
+                {/if}
+                {file.Path}
+              </button>
+            </td>
           {/if}
-        </li>
+        </tr>
       {/if}
     {/each}
-  </ul>
+  </table>
 </main>
+
+<style>
+  .repo-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: medium;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .file-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+</style>

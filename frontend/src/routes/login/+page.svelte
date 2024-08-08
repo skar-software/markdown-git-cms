@@ -23,16 +23,23 @@
 </script>
   
 <main>
-<h1>Hey, set up your gihub token!</h1>
-<form on:submit|preventDefault={handleSubmit}>
+<form class="login-form" on:submit|preventDefault={handleSubmit}>
   <label>
     <span>Github token</span>
     <input class="file-input" type="password" name="tkn" />
   </label>
-  <button type="submit">Set token</button>
+  <button class="login-button" type="submit">Set token</button>
   {#if err !== ''}
     <span style="color: #ff3e00;">{err}</span>
   {/if}
 </form>
-
 </main>
+<style>
+  main{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+</style>

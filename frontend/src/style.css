@@ -10,21 +10,14 @@ body {
 }
 
 main {
-    text-align: center;
     padding: 1em;
-    max-width: 240px;
+    min-width: 100vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     margin-top: 0;
-}
-
-@media (min-width: 640px) {
-    main {
-        max-width: none;
-    }
 }
 
 h1 {
@@ -33,26 +26,9 @@ h1 {
     font-size: 2em;
     margin-top: 0;
     font-weight: 600;
+    text-align: center;
 }
 
-ul {
-    text-decoration: none;
-    list-style-type: none;
-    color: #ff3e00;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 2em;
-    font-weight: 100;
-    height: 100%;
-    row-gap: 40px;
-}
-
-li {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-a,
 p {
     color: #023047;
     font-weight: 600;
@@ -62,7 +38,7 @@ p {
     text-decoration-color: #ff3e00;
 }
 
-button {
+.login-button {
     padding: 15px 30px 15px 30px;
     background-color: #415a77;
     color: #edede9;
@@ -77,6 +53,7 @@ span{
     font-weight: 600;
     font-size: 1.5rem;
 }
+
 .file-input {
     padding: 10px 10px 10px 10px;
     background-color: #edede9;
@@ -85,7 +62,15 @@ span{
 }
 .file-button{
     border-radius: 5px;
-    padding: 10px 13px 10px !important; 
+    padding: 15px 30px 15px 30px;
+    background-color: #415a77;
+    color: #edede9;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
 }
 .file-object{
     border-radius: 20px;
@@ -107,4 +92,18 @@ span{
 
 .update-button{
     margin-top: 20px;
+}
+table{
+    margin: 20px;
+}
+table,
+th,
+td {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+th,
+td {
+    padding: 10px;
+    padding-right: 50px;
 }

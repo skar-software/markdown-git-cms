@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   function handleOnClick(route: string, type = "normal") {
     if (type === "normal") {
       window.location.href = route;
@@ -6,26 +8,38 @@
       window.open(route, "_blank");
     }
   }
+  let path = "";
+  onMount(() => {
+    if (typeof window !== "undefined") {
+      path = window.location.pathname.split("/")[1];
+      console.log("🍷 ~ window.location.pathname:", window.location.pathname.split("/")[1]);
+    }
+  });
 </script>
 
 <div class="app">
   <header>
     <div>
       <button
+        class:current-page={path === "login"}
         class="header-button"
-        on:click={() => handleOnClick("/login")}>Connect</button
+        on:click={() => handleOnClick("/login")}
       >
+        Connect
+      </button>
+
       |
       <button
+        class:current-page={path === "repos"}
         class="header-button"
         on:click={() => handleOnClick("/repos")}>Repos</button
       >
       |
-      <button
+      <!-- <button
         class="header-button"
         on:click={() => handleOnClick("/repos")}>Markdown Editor</button
       >
-      |
+      | -->
       <button
         class="header-button"
         on:click={() => handleOnClick("https://skar-software.github.io/pubdeskmd", "help")}>Help</button
@@ -35,6 +49,7 @@
   <main>
     <slot />
   </main>
+  <div class="footer-margin"></div>
   <footer>
     <span style="font-weight: 400;">
       Powered by:
@@ -63,7 +78,8 @@
   header {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
     background-color: #edede9;
   }
@@ -85,6 +101,9 @@
   span {
     font-weight: 700;
     font-size: 1rem;
+  }
+  .footer-margin {
+    margin: 40px;
   }
   footer {
     overflow-x: hidden;
@@ -110,7 +129,7 @@
       padding: 12px 0;
     }
   }
-  header div .header-button {
+.header-button {
     background-color: transparent;
     outline: none;
     border: none;
@@ -118,5 +137,16 @@
     color: #415a77;
     font-weight: 600;
     padding: 0 10px;
+    cursor: pointer;
+  }
+  .header-button:hover {
+    text-decoration: underline;
+    text-decoration-color: #ff3e00;
+  }
+  .current-page {
+    text-decoration: underline;
+    text-decoration-color: #ff3e00 ;
+    font-weight: 700 !important;
+    cursor: pointer;
   }
 </style>

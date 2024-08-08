@@ -5,13 +5,16 @@
   export let data;
   import { Carta, MarkdownEditor } from "carta-md";
   import "carta-md/default.css";
-  // Remember to use a sanitizer to prevent XSS attacks
-  // {sanitizer: mySanitizer}
+  import { getContext } from "svelte";
+
+  const titleStore = getContext("title");
+  // Update the title when this component is mounted
+  
   const carta = new Carta();
   let value = "";
   let globalRepo: string;
   let globalPath: string;
-
+  
   const url: string = "/api/file?";
   async function getReps(): Promise<Array<any>> {
     try {
@@ -30,6 +33,7 @@
   }
 
   onMount(async () => {
+    titleStore.set("");
     await getReps();
   });
 
@@ -67,7 +71,7 @@
 </main>
 
 <style>
-    * {
+  * {
     font-family: poppins;
   }
   :global(.my-h1) {
@@ -87,10 +91,10 @@
     display: flex;
     flex-direction: column;
 
-    text-align:left;
+    text-align: left;
     max-width: 100vw;
-    justify-content:flex-start;
-    align-items:normal;
+    justify-content: flex-start;
+    align-items: normal;
     margin-top: 0;
   }
   :global(.button) {
@@ -107,8 +111,8 @@
     margin-bottom: 70px;
   }
   :global(.carta-font-code) {
-	font-family: '...', monospace;
-	font-size: 1.1rem;
-	line-height: 1.25rem;
-}
+    font-family: "...", monospace;
+    font-size: 1.1rem;
+    line-height: 1.25rem;
+  }
 </style>
