@@ -18,11 +18,11 @@
   const token = browser ? getCookie("tkn") : null;
   onMount(() => {
     if (browser) {
-      if (token === null) {
-        window.location.href = "/login";
-      } else {
-        window.location.href = "/repos";
-      }
+      // if (token === null) {
+      window.location.href = "/login";
+      // } else {
+      //   window.location.href = "/repos";
+      // }
     }
   });
 </script>
