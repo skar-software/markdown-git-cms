@@ -49,7 +49,7 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 ![image](https://github.com/user-attachments/assets/3c949a76-3b62-4d0c-a064-efebc390167d)
 
 
-# Usage
+# Usage (screenshots to be updated)
 **1) open `localhost:3000` in your browser** 
   
 ![homepage](https://github.com/user-attachments/assets/a3cdb411-de43-42c3-906e-d862881a7aea)
