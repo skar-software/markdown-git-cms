@@ -20,6 +20,16 @@
 <div class="app">
   <header>
     <div>
+      <img
+        style="margin-right: 10px;"
+        src="/markdown.png"
+        height="35"
+        width="35"
+        alt="markdown"
+      />
+      <h2><a href="https://github.com/skar-software/pubdeskmd" target="_blank">Pubdeskmd</a></h2>
+    </div>
+    <div>
       <button
         class:current-page={path === "login"}
         class="header-button"
@@ -59,28 +69,37 @@
         >Carta Markdown Editor
       </a>
     </span>
-    <span style="font-weight: 400;">
-      credits:
-      <a
-        class="foot"
-        href="https://github.com/sahildhingraa">@sahildhingra</a
-      >
-      <span> ,</span>
-      <a
-        class="foot"
-        href="https://github.com/Wawilow">@wawilow</a
-      >
-    </span>
   </footer>
 </div>
 
 <style>
-  header {
+  div {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    font-size: normal;
+  }
+  a{
+    color: #415a77;
+  }
+  h2 {
+    color: #415a77;
+    text-decoration: underline;
+    font-size: 1.5em;
+    margin-top: 0;
+    font-weight: 600;
+    text-align: center;
+    /* padding-right: 30vw; */
+    text-decoration-color: red;
+  }
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
     padding: 10px;
+    width: 100%;
     background-color: #edede9;
   }
   * {
@@ -89,7 +108,8 @@
   .app {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    background-color: #edede9;
+    /* min-height: 100vh; */
   }
 
   main {
@@ -129,7 +149,7 @@
       padding: 12px 0;
     }
   }
-.header-button {
+  .header-button {
     background-color: transparent;
     outline: none;
     border: none;
@@ -145,7 +165,7 @@
   }
   .current-page {
     text-decoration: underline;
-    text-decoration-color: #ff3e00 ;
+    text-decoration-color: #ff3e00;
     font-weight: 700 !important;
     cursor: pointer;
   }

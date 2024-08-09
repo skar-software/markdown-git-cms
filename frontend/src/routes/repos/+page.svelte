@@ -5,9 +5,9 @@
   import "../../style.css";
   import { getContext } from "svelte";
 
-const titleStore = getContext("title");
-// Update the title when this component is mounted
-titleStore.set(`Choose your repository`);
+  const titleStore = getContext("title");
+  // Update the title when this component is mounted
+  titleStore.set(`Choose your repository`);
 
   interface Rep {
     Name: string;
@@ -46,7 +46,10 @@ titleStore.set(`Choose your repository`);
   <table>
     <tr>
       <th>#</th>
-      <th>Name</th>
+      <th style="display: flex; flex-direction:column">
+        <span>Repo Name</span>
+        <span>(sorted by last edited)</span>
+      </th>
     </tr>
     {#each r as rep, i}
       {#if rep.Name !== ""}
@@ -79,3 +82,10 @@ titleStore.set(`Choose your repository`);
     </tr>
   </table>
 </main>
+<style>
+  span{
+    font-size: small !important;
+    border: none;
+    outline: none;
+  }
+</style>

@@ -23,13 +23,13 @@
 </script>
 
 <main>
-  <h1>Set up your gihub token!</h1>
+  <!-- <h1>Set up your gihub token!</h1> -->
   <form
     class="login-form"
     on:submit|preventDefault={handleSubmit}
   >
     <label>
-      <span>Github token</span>
+      <span>Enter your Github token</span>
       <input
         class="file-input"
         type="password"
@@ -38,11 +38,12 @@
     </label>
     <button
       class="login-button"
-      type="submit">Set token</button
+      type="submit">Submit</button
     >
     {#if err !== ""}
       <span style="color: #ff3e00;">{err}</span>
     {/if}
+    <a href="https://skar-software.github.io/pubdeskmd" target="_blank">Help</a>
   </form>
 </main>
 
@@ -53,5 +54,13 @@
     justify-content: center;
     align-items: center;
     height: 50vh;
+  }
+  a{
+    font-size: 1.5rem;
+    margin-left: 15px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: red;
+    color: #415a77;
   }
 </style>

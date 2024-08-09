@@ -26,5 +26,3 @@
     }
   });
 </script>
-
-<main></main>

@@ -9,12 +9,12 @@
 
   const titleStore = getContext("title");
   // Update the title when this component is mounted
-  
+
   const carta = new Carta();
   let value = "";
   let globalRepo: string;
   let globalPath: string;
-  
+
   const url: string = "/api/file?";
   async function getReps(): Promise<Array<any>> {
     try {
@@ -31,12 +31,19 @@
     }
     return [];
   }
+  let path: string = "";
 
   onMount(async () => {
     titleStore.set("");
+
+    const parts = data.rep.split("/");
+    const repoName = parts[0];
+    const restPath = parts.slice(1).join("/");
+    path = `https://github.com/${data.owner}/${repoName}/tree/main/${restPath}/${data.file}`;
+    console.log(path);
     await getReps();
   });
-
+  let submited = 0;
   let url2 = "/api/upl";
   async function SendFile() {
     let formData = new FormData();
@@ -49,12 +56,17 @@
       body: formData,
     });
     if (response.status === 200) {
-      alert("File successfully updated and committed to Github.");
-      window.location.reload();
+      submited = 1;
     } else {
-      alert("Error updating file");
-      console.error("Error:", response);
+      submited = 2;
     }
+    // if (response.status === 200) {
+    //   alert("File successfully updated and committed to Github.");
+    //   window.location.reload();
+    // } else {
+    //   alert("Error updating file");
+    //   console.error("Error:", response);
+    // }
   }
 </script>
 
@@ -64,10 +76,22 @@
     {carta}
     bind:value
   />
-  <button
-    class="button"
-    on:click={SendFile}>Update file</button
-  >
+  <div>
+    <button
+      class="button"
+      on:click={SendFile}>Update file</button
+    >
+    {#if submited === 1}
+      <span
+        >updated github file: <a
+          href={path}
+          target="_blank">{data.file}</a
+        ></span
+      >
+    {:else if submited === 2}
+      <span>Error updating file</span>
+    {/if}
+  </div>
 </main>
 
 <style>
@@ -76,18 +100,13 @@
   }
   :global(.my-h1) {
     color: #415a77;
-    text-decoration: underline;
-    font-size: 2em;
-    font-weight: 600;
-    font-family: poppins;
     text-align: center;
-    margin-top: 0;
-  }
+   }
   :global(.main) {
     padding: 1em;
     margin: 0 auto;
     background-color: #edede9;
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
 
@@ -114,5 +133,15 @@
     font-family: "...", monospace;
     font-size: 1.1rem;
     line-height: 1.25rem;
+  }
+  a {
+    font-size: 1.3rem;
+    color: blue;
+    text-decoration: underline;
+  }
+  span {
+    font-size: 1.3rem;
+    color: red;
+    margin: 0 10px;
   }
 </style>
