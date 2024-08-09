@@ -120,7 +120,7 @@ func GithubMyRepos(c *fiber.Ctx) error {
 	}
 	client := github.NewClient(nil).WithAuthToken(tkn)
 	listOpts := github.ListOptions{Page: pageInt, PerPage: 10}
-	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "created", Affiliation: "owner,collaborator,organization_member", ListOptions: listOpts}
+	opts := github.RepositoryListByAuthenticatedUserOptions{Sort: "updated", Affiliation: "owner,collaborator,organization_member", ListOptions: listOpts}
 	list, _, err := client.Repositories.ListByAuthenticatedUser(context.Background(), &opts)
 	if err != nil {
 		return c.Status(200).SendString(fmt.Sprintf("error, %e", err))
