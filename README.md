@@ -15,7 +15,7 @@ Start the docker server at localhost:3000
 docker run --name pubdeskmd -d -p 3000:4173 anonranger/pubdeskmd
 ```
 
-**2) Create a Personal Access Token
+**2) Create a Personal Access Token**
 
 A) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (Fine grained token) - for **Personal** repos
 
@@ -23,7 +23,7 @@ OR
 
 B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (Classic token) - for **Organization** repos
 
-##A Fine grained Token (for Personal repos)
+## A Fine grained Token (for Personal repos)
 
 **Security recommendation:** When creating a Fine grained token, keep the validity window to a small timeline. Also give access only to specific repos you want to edit.
 
@@ -35,7 +35,7 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 
 ![token-perm4](https://github.com/user-attachments/assets/c9d68906-10dd-47be-8ed1-3ae80faa5098)
 
-##B Classic Token (for Organization repos)**
+## B Classic Token (for Organization repos)**
 
 ![token-classic-org1](https://github.com/user-attachments/assets/6eca3d22-b198-4d9c-bae2-b52024def856)
 
