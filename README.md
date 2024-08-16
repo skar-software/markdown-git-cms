@@ -54,9 +54,7 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 
 **2) Add Github Token, and select your github repo to view the markdown (.md) files** 
   
-![token](https://github.com/user-attachments/assets/1a12258b-d6c2-49ed-9354-67ba04a460ac)
-
-![GitHub Repo](https://github.com/user-attachments/assets/4c56130d-35bc-4e60-b97f-9626bfe3557f)
+![image](https://github.com/user-attachments/assets/31154449-bc6f-4d81-913e-9e3e94efd5d8)
 
 **3) Open the Github repo, based on Github Token Permissions, to view and edit the markdown (files).**
    
