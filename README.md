@@ -50,7 +50,7 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 # Usage (screenshots to be updated)
 **1) open `localhost:3000` in your browser** 
   
-![homepage](https://github.com/user-attachments/assets/a3cdb411-de43-42c3-906e-d862881a7aea)
+![image](https://github.com/user-attachments/assets/c77ac03d-6597-47ec-88d1-810bdc24d54e)
 
 **2) Add Github Token, and select your github repo to view the markdown (.md) files** 
   
