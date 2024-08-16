@@ -58,7 +58,7 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
 
 **3) Open the Github repo, based on Github Token Permissions, to view and edit the markdown (files).**
    
-![md file](https://github.com/user-attachments/assets/51ab08e0-df17-499f-9dba-e03ae0f8757f)
+![image](https://github.com/user-attachments/assets/2dde8197-a36c-4374-a99c-9d0e47aa23ad)
 
 ![WYSWYG](https://github.com/user-attachments/assets/fa6c9d9d-f63f-420e-ad35-33b6236ef940)
 
