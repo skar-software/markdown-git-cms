@@ -60,10 +60,6 @@ B) Click on Profile -> Settings -> Developer Settings -> Personal Access Token (
    
 ![image](https://github.com/user-attachments/assets/2dde8197-a36c-4374-a99c-9d0e47aa23ad)
 
-![WYSWYG](https://github.com/user-attachments/assets/fa6c9d9d-f63f-420e-ad35-33b6236ef940)
-
 **4) After you are done editing, click update to push the changes automatically to Github repo** 
   
-![updated file](https://github.com/user-attachments/assets/c744a2d9-297c-419d-b5a1-a76cd112e348)
-
 ![updated repo](https://github.com/user-attachments/assets/fed39a7b-9029-49e8-8ae6-8473eb27bfba)
