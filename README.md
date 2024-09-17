@@ -1,4 +1,4 @@
-# PubdeskMD
+# Markdown-Git-CMS
 
 ## Markdown editor with Github integration - to edit and update files
 
